@@ -1,28 +1,29 @@
 package com.bharath.meditrack.controller;
 
-import com.bharath.meditrack.model.Patient;
-import com.bharath.meditrack.repo.PatientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bharath.meditrack.dto.PatientRequest;
+import com.bharath.meditrack.dto.PatientResponse;
+import com.bharath.meditrack.service.PatientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/patients")
+@RequiredArgsConstructor
 public class PatientController {
 
-    @Autowired
-    private PatientRepository patientRepo;
+    private final PatientService patientService;
 
-    @GetMapping("/patients")
-    public List<Patient> all() {
-        return patientRepo.findAll();
+    @GetMapping
+    public ResponseEntity<List<PatientResponse>> getAll() {
+        return ResponseEntity.ok(patientService.getAll());
     }
 
-    // SMELL: no duplicate-email check, no validation, returns the entity directly.
-    @PostMapping("/patients")
-    public Patient register(@RequestBody Patient p) {
-        p.setCreatedAt(LocalDateTime.now());
-        return patientRepo.save(p);
+    @PostMapping
+    public ResponseEntity<PatientResponse> register(@RequestBody PatientRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(patientService.register(request));
     }
 }

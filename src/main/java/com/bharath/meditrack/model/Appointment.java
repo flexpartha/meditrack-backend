@@ -1,14 +1,18 @@
 package com.bharath.meditrack.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -41,6 +45,7 @@ public class Appointment {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<AppointmentService> services = new ArrayList<>();
 }
